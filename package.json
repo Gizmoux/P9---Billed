@@ -2,7 +2,8 @@
 	"scripts": {
 		"test": "jest --coverage",
 		"testBills": "jest --coverage src/__tests__/Bills.js  --silent",
-		"testBills2": "jest --coverage src/__tests__/Bills.js"
+		"testBills2": "jest --coverage src/__tests__/Bills.js",
+		"testBills3": "jest --coverage src/__tests__/NewBill.js"
 	},
 	"jest": {
 		"verbose": true,
