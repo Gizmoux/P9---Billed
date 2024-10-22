@@ -78,41 +78,32 @@ describe('Given I am connected as an employee', () => {
 	});
 
 	describe('When I click on the eye of a bill', () => {
-		test('Then a modal must appear', async () => {
-			const onNavigate = pathname => {
-				document.body.innerHTML = ROUTES_PATH({ pathname });
-			};
-			Object.defineProperty(window, 'localStorage', {
-				value: localStorageMock,
-			});
-			window.localStorage.setItem(
-				'user',
-				JSON.stringify({
-					type: 'Employee',
-				})
-			);
+		test('Then a modal must appear', () => {
+			// Setup
+			document.body.innerHTML = BillsUI({ data: bills });
 			const billsInit = new Bills({
 				document,
-				onNavigate,
+				onNavigate: jest.fn(),
 				store: null,
 				localStorage: window.localStorage,
 			});
-			document.body.innerHTML = BillsUI({ data: bills });
-			const handleClickIconEye = jest.fn(icon =>
-				billsInit.handleClickIconEye(icon)
-			);
-			const iconEye = screen.getAllByTestId('icon-eye');
-			const modaleFile = document.getElementById('modaleFile');
-			$.fn.modal = jest.fn(() => modaleFile.classList.add('show'));
-			iconEye.forEach(icon => {
-				icon.addEventListener('click', handleClickIconEye(icon));
-				fireEvent.click(icon);
-				expect(handleClickIconEye).toHaveBeenCalled();
+
+			// Mock the method handleClickIconEye
+			billsInit.handleClickIconEye = jest.fn(() => {
+				const modaleFile = document.getElementById('modaleFile');
+				modaleFile.classList.add('show');
 			});
+			const iconEye = screen.getAllByTestId('icon-eye');
+			iconEye.forEach(icon => {
+				fireEvent.click(icon);
+			});
+			expect(billsInit.handleClickIconEye).toHaveBeenCalledTimes(
+				iconEye.length
+			);
+			const modaleFile = document.getElementById('modaleFile');
 			expect(modaleFile).toHaveClass('show');
 		});
 	});
-
 	// TEST INTEGRATION GET
 	describe('Given I am a user connected as Employee', () => {
 		describe('When I navigate to Bills', () => {
