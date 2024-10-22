@@ -91,7 +91,7 @@ describe('Given I am connected as an employee', () => {
 		});
 	});
 
-	describe('When I click on the button "Envoyer" with an empty form', () => {
+	describe('When I click on the button -Envoyer- with an empty form', () => {
 		test('Then the form should still be rendered', async () => {
 			Object.defineProperty(window, 'localStorage', {
 				value: localStorageMock,
@@ -162,7 +162,6 @@ describe('Given I am connected as an employee', () => {
 
 	describe('When I submit a new bill', () => {
 		test('Then the bill should be created', async () => {
-			// Setup
 			jest.spyOn(mockStore, 'bills');
 			Object.defineProperty(window, 'localStorage', {
 				value: localStorageMock,
@@ -214,7 +213,7 @@ describe('Given I am connected as an employee', () => {
 		});
 	});
 
-	// FAIRE TEST ERRORS ET API MOCK
+	// POST NEWBILL ET ERREURS
 	describe('Given I am a user connected as Employee', () => {
 		beforeEach(() => {
 			jest.spyOn(mockStore, 'bills');
