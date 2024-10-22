@@ -91,7 +91,7 @@ describe('Given I am connected as an employee', () => {
 		});
 	});
 
-	describe('When I click on the button -Envoyer- with an empty form', () => {
+	describe('When I click on the button "Envoyer" with an empty form', () => {
 		test('Then the form should still be rendered', async () => {
 			Object.defineProperty(window, 'localStorage', {
 				value: localStorageMock,
