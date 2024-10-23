@@ -124,9 +124,7 @@ describe('Given I am connected as an employee', () => {
 
 	describe('When an invalid file is uploaded', () => {
 		test('Then an alert should be displayed', async () => {
-			console.log('Test starting');
 			document.body.innerHTML = NewBillUI();
-			console.log('DOM after NewBillUI:', document.body.innerHTML);
 
 			const newBill = new NewBill({
 				document,
@@ -134,10 +132,8 @@ describe('Given I am connected as an employee', () => {
 				store: mockStore,
 				localStorage: window.localStorage,
 			});
-			console.log('NewBill instance created');
 
 			const inputFile = screen.getByTestId('file');
-			console.log('Input file element:', inputFile);
 
 			// Mock the alert function
 			const alertMock = jest
@@ -149,7 +145,6 @@ describe('Given I am connected as an employee', () => {
 					files: [new File([''], 'document.pdf', { type: 'application/pdf' })],
 				},
 			});
-			console.log('File change event fired');
 
 			// Verify that the alert was called
 			expect(alertMock).toHaveBeenCalledTimes(1);
