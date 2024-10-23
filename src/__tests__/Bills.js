@@ -3,10 +3,10 @@
  */
 
 import mockStore from '../__mocks__/store';
-import { screen, waitFor, fireEvent } from '@testing-library/dom';
+import { screen, waitFor, fireEvent, userEvent } from '@testing-library/dom';
 import BillsUI from '../views/BillsUI.js';
 import { bills } from '../fixtures/bills.js';
-import { ROUTES_PATH } from '../constants/routes.js';
+import { ROUTES_PATH, ROUTES } from '../constants/routes.js';
 import { localStorageMock } from '../__mocks__/localStorage.js';
 import '@testing-library/jest-dom';
 import Bills from '../containers/Bills.js';
@@ -78,30 +78,55 @@ describe('Given I am connected as an employee', () => {
 	});
 
 	describe('When I click on the eye of a bill', () => {
-		test('Then a modal must appear', () => {
-			// Setup
+		let billsInstance;
+
+		beforeEach(() => {
+			const onNavigate = pathname => {
+				document.body.innerHTML = ROUTES({ pathname });
+			};
+
+			Object.defineProperty(window, 'localStorage', {
+				value: {
+					getItem: jest.fn(),
+					setItem: jest.fn(),
+					clear: jest.fn(),
+				},
+			});
+
+			window.localStorage.setItem(
+				'user',
+				JSON.stringify({
+					type: 'Employee',
+					email: 'a@a',
+				})
+			);
+
 			document.body.innerHTML = BillsUI({ data: bills });
-			const billsInit = new Bills({
+
+			billsInstance = new Bills({
 				document,
-				onNavigate: jest.fn(),
-				store: null,
+				onNavigate,
+				store: mockStore,
 				localStorage: window.localStorage,
 			});
 
-			// Mock the method handleClickIconEye
-			billsInit.handleClickIconEye = jest.fn(() => {
-				const modaleFile = document.getElementById('modaleFile');
-				modaleFile.classList.add('show');
+			const modalElement = document.getElementById('modaleFile');
+			$.fn.modal = jest.fn(() => modalElement.classList.add('show'));
+		});
+
+		test('Then a modal should appear', async () => {
+			const iconEyes = screen.getAllByTestId('icon-eye');
+			const handleClickIconEye = jest.fn(billsInstance.handleClickIconEye);
+
+			const modalElement = document.getElementById('modaleFile');
+
+			iconEyes.forEach(iconEye => {
+				iconEye.addEventListener('click', () => handleClickIconEye(iconEye));
+				fireEvent.click(iconEye);
+
+				expect(handleClickIconEye).toHaveBeenCalled();
+				expect(modalElement).toHaveClass('show');
 			});
-			const iconEye = screen.getAllByTestId('icon-eye');
-			iconEye.forEach(icon => {
-				fireEvent.click(icon);
-			});
-			expect(billsInit.handleClickIconEye).toHaveBeenCalledTimes(
-				iconEye.length
-			);
-			const modaleFile = document.getElementById('modaleFile');
-			expect(modaleFile).toHaveClass('show');
 		});
 	});
 	// TEST INTEGRATION GET
