@@ -135,7 +135,7 @@ describe('Given I am connected as an employee', () => {
 
 			const inputFile = screen.getByTestId('file');
 
-			// Mock the alert function
+			// Mock of the alert
 			const alertMock = jest
 				.spyOn(window, 'alert')
 				.mockImplementation(() => {});
@@ -146,11 +146,11 @@ describe('Given I am connected as an employee', () => {
 				},
 			});
 
-			// Verify that the alert was called
+			// check call alert
 			expect(alertMock).toHaveBeenCalledTimes(1);
 			expect(alertMock).toHaveBeenCalledWith('Extensions non permises');
 
-			// Restore the original alert function
+			// Restore alert
 			alertMock.mockRestore();
 		});
 	});
