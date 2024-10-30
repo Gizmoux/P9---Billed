@@ -83,7 +83,7 @@ export default class NewBill {
 	};
 
 	// not need to cover this function by tests
-	/* istanbul ignore next */
+	// /* istanbul ignore next */
 	updateBill = bill => {
 		console.log('Updating bill:', bill);
 		if (this.store) {
