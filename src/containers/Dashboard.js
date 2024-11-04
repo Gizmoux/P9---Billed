@@ -14,7 +14,7 @@ export const filteredBills = (data, status) => {
 				if (typeof jest !== 'undefined') {
 					selectCondition = bill.status === status;
 				} else {
-				/* istanbul ignore next */
+					/* istanbul ignore next */
 					// in prod environment
 					const userEmail = JSON.parse(localStorage.getItem('user')).email;
 					selectCondition =
@@ -108,9 +108,9 @@ export default class {
 		} else {
 			$(`#open-bill${bill.id}`).css({ background: '#0D5AE5' });
 
-			// $('.dashboard-right-container div').html(`
-			//   <div id="big-billed-icon" data-testid="big-billed-icon"> ${BigBilledIcon} </div>
-			// `)
+			$('.dashboard-right-container div').html(`
+			  <div id="big-billed-icon" data-testid="big-billed-icon"> ${BigBilledIcon} </div>
+			`);
 			$('.vertical-navbar').css({ height: '120vh' });
 			this.counter++;
 		}
@@ -155,6 +155,7 @@ export default class {
 		}
 
 		bills.forEach(bill => {
+			$(`#open-bill${bill.id}`).off('click');
 			$(`#open-bill${bill.id}`).click(e =>
 				this.handleEditTicket(e, bill, bills)
 			);
