@@ -84,6 +84,7 @@ describe('Given I am connected as an employee', () => {
 				localStorage: window.localStorage,
 			});
 		});
+		// Vérifier que le formulaire est présent
 		test('Then the new bill form should be displayed', () => {
 			const html = NewBillUI();
 			document.body.innerHTML = html;
@@ -91,8 +92,9 @@ describe('Given I am connected as an employee', () => {
 		});
 	});
 
-	describe('When I click on the button "Envoyer" with an empty form', () => {
-		test('Then the form should still be rendered', async () => {
+	describe('When I am on a newBill Page', () => {
+		test('Then It should keep the form rendered when I submit', async () => {
+			// Utilisation du mock localStorage pour simuler un utilisateur connecté
 			Object.defineProperty(window, 'localStorage', {
 				value: localStorageMock,
 			});
@@ -118,7 +120,8 @@ describe('Given I am connected as an employee', () => {
 			const handleClickSend = jest.fn(newBill.handleFormValidation);
 			btnSend.addEventListener('click', handleClickSend);
 			fireEvent.click(btnSend);
-			expect(screen.getByTestId('form-new-bill')).toBeTruthy;
+			expect(screen.getByTestId('form-new-bill')).toBeTruthy();
+			// expect(handleClickSend).toHaveBeenCalled();
 		});
 	});
 
@@ -260,59 +263,3 @@ describe('Given I am connected as an employee', () => {
 		});
 	});
 });
-// describe('Constructor', () => {
-// 	let newBill;
-// 	let mockDocument;
-// 	let mockOnNavigate;
-// 	let mockStore;
-// 	let mockLocalStorage;
-
-// 	beforeEach(() => {
-// 		mockDocument = {
-// 			querySelector: jest.fn().mockReturnValue({
-// 				addEventListener: jest.fn(),
-// 			}),
-// 		};
-// 		mockOnNavigate = jest.fn();
-// 		mockStore = {};
-// 		mockLocalStorage = {};
-
-// 		newBill = new NewBill({
-// 			document: mockDocument,
-// 			onNavigate: mockOnNavigate,
-// 			store: mockStore,
-// 			localStorage: mockLocalStorage,
-// 		});
-// 	});
-
-// 	test('Then It should add listeners in form and input file', () => {
-// 		expect(mockDocument.querySelector).toHaveBeenCalledWith(
-// 			'form[data-testid="form-new-bill"]'
-// 		);
-// 		expect(mockDocument.querySelector).toHaveBeenCalledWith(
-// 			'input[data-testid="file"]'
-// 		);
-
-// 		const mockForm = mockDocument.querySelector(
-// 			'form[data-testid="form-new-bill"]'
-// 		);
-// 		const mockFileInput = mockDocument.querySelector(
-// 			'input[data-testid="file"]'
-// 		);
-
-// 		expect(mockForm.addEventListener).toHaveBeenCalledWith(
-// 			'submit',
-// 			expect.any(Function)
-// 		);
-// 		expect(mockFileInput.addEventListener).toHaveBeenCalledWith(
-// 			'change',
-// 			expect.any(Function)
-// 		);
-// 	});
-
-// 	test('Then It should initialize Null', () => {
-// 		expect(newBill.fileUrl).toBeNull();
-// 		expect(newBill.fileName).toBeNull();
-// 		expect(newBill.billId).toBeNull();
-// 	});
-// });
