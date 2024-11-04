@@ -11,15 +11,18 @@ import { localStorageMock } from '../__mocks__/localStorage.js';
 import '@testing-library/jest-dom';
 import Bills from '../containers/Bills.js';
 import router from '../app/Router';
-
+// Mock de la fonction store pour éviter les appels réels à l'API dans les tests
 jest.mock('../app/store', () => mockStore);
 
 describe('Given I am connected as an employee', () => {
 	describe('When I am on Bills Page', () => {
+		// On vérifie que l'icône des factures est mis en évidence
 		test('Then bill icon in vertical layout should be highlighted', async () => {
+			// Utilisation du mock localStorage pour simuler un utilisateur connecté
 			Object.defineProperty(window, 'localStorage', {
 				value: localStorageMock,
 			});
+			// Simule l'enregistrement d'un user dans le localStorage
 			window.localStorage.setItem(
 				'user',
 				JSON.stringify({
@@ -30,7 +33,9 @@ describe('Given I am connected as an employee', () => {
 			root.setAttribute('id', 'root');
 			document.body.append(root);
 			router();
+			// Simule la navigation vers la page facture
 			window.onNavigate(ROUTES_PATH.Bills);
+			// Attente que l'élément soit présent dans le DOM
 			await waitFor(() => {
 				return screen.getByTestId('icon-window');
 			});
@@ -136,30 +141,48 @@ describe('Given I am connected as an employee', () => {
 	// TEST INTEGRATION GET
 	describe('Given I am a user connected as Employee', () => {
 		describe('When I navigate to Bills', () => {
-			describe('When an error occurs on API', () => {
-				beforeEach(() => {
-					jest.spyOn(mockStore, 'bills');
-					Object.defineProperty(window, 'localStorage', {
-						value: localStorageMock,
-					});
-					window.localStorage.setItem(
-						'user',
-						JSON.stringify({ type: 'Employee', email: 'a@a' })
-					);
-					const root = document.createElement('div');
-					root.setAttribute('id', 'root');
-					document.body.appendChild(root);
-					router();
+			// Initialisation et configuration
+			beforeEach(() => {
+				jest.spyOn(mockStore, 'bills');
+				Object.defineProperty(window, 'localStorage', {
+					value: localStorageMock,
 				});
+				window.localStorage.setItem(
+					'user',
+					JSON.stringify({ type: 'Employee', email: 'a@a' })
+				);
+				// Création d'un élément 'div' qui ensuite apparait dans le document
+				// Puis initialisation du routage de l'application
+				const root = document.createElement('div');
+				root.setAttribute('id', 'root');
+				document.body.appendChild(root);
+				router();
+			});
+			test('fetches bills from mock API GET', async () => {
+				// Espionne la méthode bills pour vérifier qu'elle est appelée
+				const billsSpy = jest.spyOn(mockStore, 'bills');
 
+				// simulation pour naviguer vers la page Bills
+				window.onNavigate(ROUTES_PATH.Bills);
+
+				// Attente que le texte 'Mes notes de frais' s'affiche
+				await waitFor(() => screen.getByText('Mes notes de frais'));
+				// Vérifie que la méthode du mock store a été appelée pour récupérer les factures
+				expect(billsSpy).toHaveBeenCalled();
+				expect(screen.getByTestId('tbody')).toBeTruthy();
+				// Vérification que les factures sont récupérées avec succès
+			});
+			describe('When an error occurs on API', () => {
 				test('fetches bills from an API and fails with 404 message error', async () => {
+					// Mock API pour simuler une erreur 404 au lieu d'afficher normalement une liste
 					mockStore.bills.mockImplementationOnce(() => ({
 						list: () => Promise.reject(new Error('Erreur 404')),
 					}));
-
+					// Simulation de la navigation vers la page Bills
 					window.onNavigate(ROUTES_PATH.Bills);
 
 					await waitFor(() => {
+						// Vérification de l'affichage du message d'erreur 404
 						const errorMessage = screen.getByText(/Erreur 404/);
 						expect(errorMessage).toBeInTheDocument();
 						expect(errorMessage.textContent).toContain('Erreur 404');
