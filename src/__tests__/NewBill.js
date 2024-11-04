@@ -186,7 +186,7 @@ describe('Given I am connected as an employee', () => {
 				file: new File([''], 'test.jpg', { type: 'image/jpeg' }),
 			};
 
-			// je remplis le foirm
+			// fill form
 			screen.getByTestId('expense-type').value = inputData.type;
 			screen.getByTestId('expense-name').value = inputData.name;
 			screen.getByTestId('datepicker').value = inputData.date;
@@ -208,32 +208,22 @@ describe('Given I am connected as an employee', () => {
 		});
 	});
 
-	// POST NEWBILL ET ERREURS
+	//  ERRORS
 	describe('Given I am a user connected as Employee', () => {
-		beforeEach(() => {
-			jest.spyOn(mockStore, 'bills');
+		describe('When I navigate to newBill and an error occurs on API', () => {
+			beforeEach(() => {
+				jest.spyOn(mockStore, 'bills');
 
-			localStorage.setItem(
-				'user',
-				JSON.stringify({ type: 'Employee', email: 'a@a' })
-			);
-			const root = document.createElement('div');
-			root.setAttribute('id', 'root');
-			document.body.append(root);
-			router();
-		});
-
-		describe('When I navigate to newBill', () => {
-			// Nouvelle facture
-			test('promise from mock API POST returns object bills with correct values', async () => {
-				window.onNavigate(ROUTES_PATH.NewBill);
-
-				const bills = await mockStore.bills().create();
-				expect(bills.key).toBe('1234');
-				expect(bills.fileUrl).toBe('https://localhost:3456/images/test.jpg');
+				localStorage.setItem(
+					'user',
+					JSON.stringify({ type: 'Employee', email: 'a@a' })
+				);
+				const root = document.createElement('div');
+				root.setAttribute('id', 'root');
+				document.body.append(root);
+				router();
 			});
 
-			// Erreur 404
 			test('Then, fetches bills from an API and fails with 404 message error', async () => {
 				window.onNavigate(ROUTES_PATH.NewBill);
 
@@ -251,7 +241,6 @@ describe('Given I am connected as an employee', () => {
 				expect(message).toBeTruthy();
 			});
 
-			// Erreur 500
 			test('Then, fetches messages from an API and fails with 500 message error', async () => {
 				mockStore.bills.mockImplementationOnce(() => {
 					return {
