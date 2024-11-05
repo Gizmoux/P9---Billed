@@ -42,8 +42,8 @@ export default class {
 				.list()
 				.then(snapshot => {
 					const bills = snapshot
-						// Il faudra modifier le tri ici pour que ça fonctionne
-						// .sort((a, b) => new Date(b.date) - new Date(a.date))
+						// To-Do
+						.sort((a, b) => new Date(b.date) - new Date(a.date))
 						.map(doc => {
 							try {
 								return {
