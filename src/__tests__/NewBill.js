@@ -237,7 +237,7 @@ describe('Given I am connected as an employee', () => {
 						},
 					};
 				});
-
+				// Permet à d'autres opérations de se terminer
 				await new Promise(process.nextTick);
 				document.body.innerHTML = BillsUI({ error: 'Erreur 404' });
 				const message = screen.getByText('Erreur 404');
