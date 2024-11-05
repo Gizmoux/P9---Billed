@@ -21,6 +21,7 @@ const row = bill => {
 
 const rows = data =>
 	data
+		// To-Do
 		?.sort((a, b) => new Date(b.date) - new Date(a.date))
 		?.map(bill => row(bill))
 		?.join('') ?? '';
