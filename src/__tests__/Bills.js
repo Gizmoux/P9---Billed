@@ -169,8 +169,8 @@ describe('Given I am connected as an employee', () => {
 				await waitFor(() => screen.getByText('Mes notes de frais'));
 				// Vérifie que la méthode du mock store a été appelée pour récupérer les factures
 				expect(billsSpy).toHaveBeenCalled();
+				// Vérification que le tableau des factures est chargé
 				expect(screen.getByTestId('tbody')).toBeTruthy();
-				// Vérification que les factures sont récupérées avec succès
 			});
 			describe('When an error occurs on API', () => {
 				test('fetches bills from an API and fails with 404 message error', async () => {
