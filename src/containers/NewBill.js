@@ -21,8 +21,12 @@ export default class NewBill {
 		e.preventDefault();
 		const file = this.document.querySelector(`input[data-testid="file"]`)
 			.files[0];
+		// si e.target.value "nicolas\Users\name\music\file.txt"
 		const filePath = e.target.value.split(/\\/g);
+		// alors filePath => ["nicolas", "Users", "name", "music", "file.txt"]
 		const fileName = filePath[filePath.length - 1];
+		// fileName => .txt
+
 		// To Do -> Limited Extensions
 		const limitedExtensions = ['jpg', 'jpeg', 'png'];
 		const fileExtension = fileName.split('.').pop().toLowerCase();
